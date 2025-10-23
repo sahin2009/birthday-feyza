@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blow the Candles! 🎂</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #fff;
+            overflow: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .instruction {
+            font-size: clamp(12px, 3vw, 18px);
+            margin-bottom: 30px;
+            text-align: center;
+            padding: 0 20px;
+            line-height: 1.8;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+        }
+
+        #canvas {
+            border: 4px solid #fff;
+            box-shadow: 0 0 30px rgba(255,255,255,0.3);
+            max-width: 100%;
+            height: auto;
+        }
+
+        .status {
+            margin-top: 20px;
+            font-size: clamp(10px, 2.5vw, 14px);
+            color: #ffd700;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+        }
+
+        /* Modal for bouquet */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 40px;
+            border: 4px solid #fff;
+            box-shadow: 8px 8px 0px rgba(0,0,0,0.5);
+            text-align: center;
+            max-width: 90%;
+        }
+
+        .modal-content h2 {
+            font-size: clamp(16px, 4vw, 24px);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .bouquet {
+            font-size: 80px;
+            margin: 20px 0;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .modal button {
+            font-family: 'Press Start 2P', cursive;
+            font-size: clamp(12px, 3vw, 16px);
+            padding: 15px 30px;
+            border: 4px solid #fff;
+            background: #26de81;
+            color: #fff;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.3);
+        }
+
+        .modal button:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.3);
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #f0f;
+            position: fixed;
+            animation: confetti-fall 3s linear;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="instruction">
+        🎂 BLOW THE CANDLES! 🎂<br>
+        <span style="font-size: 0.7em;">Use your microphone to blow</span>
+    </div>
+    
+    <canvas id="canvas" width="600" height="500"></canvas>
+    
+    <div class="status" id="status">Candles lit: <span id="candleCount">4</span>/4</div>
+
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <h2>🎉 ALL CANDLES BLOWN! 🎉</h2>
+            <div class="bouquet">💐</div>
+            <h2>HERE'S A BOUQUET<br>FOR YOU! 💝</h2>
+            <button onclick="goToFlowers()">CONTINUE →</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let candlesLit = 4;
+
+        // Responsive canvas
+        function resizeCanvas() {
+            const maxWidth = Math.min(600, window.innerWidth - 40);
+            const ratio = 500 / 600;
+            canvas.width = maxWidth;
+            canvas.height = maxWidth * ratio;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Candle positions (4 candles)
+        const candles = [
+            { x: 150, y: 100, lit: true },
+            { x: 250, y: 100, lit: true },
+            { x: 350, y: 100, lit: true },
+            { x: 450, y: 100, lit: true }
+        ];
+
+        // Flame animation
+        let flameOffset = 0;
+
+        function drawCake() {
+            const scale = canvas.width / 600;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Cake base (3D effect)
+            ctx.fillStyle = '#ff6b9d';
+            ctx.fillRect(100 * scale, 250 * scale, 400 * scale, 150 * scale);
+            
+            // Cake top
+            ctx.fillStyle = '#ff8fb3';
+            ctx.beginPath();
+            ctx.moveTo(100 * scale, 250 * scale);
+            ctx.lineTo(150 * scale, 220 * scale);
+            ctx.lineTo(550 * scale, 220 * scale);
+            ctx.lineTo(500 * scale, 250 * scale);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Cake side
+            ctx.fillStyle = '#ff4d7d';
+            ctx.beginPath();
+            ctx.moveTo(500 * scale, 250 * scale);
+            ctx.lineTo(550 * scale, 220 * scale);
+            ctx.lineTo(550 * scale, 370 * scale);
+            ctx.lineTo(500 * scale, 400 * scale);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Frosting
+            ctx.fillStyle = '#fff';
+            for (let i = 0; i < 8; i++) {
+                ctx.beginPath();
+                ctx.arc((120 + i * 50) * scale, 250 * scale, 20 * scale, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Draw candles
+            candles.forEach(candle => {
+                // Candle stick
+                ctx.fillStyle = '#ffd700';
+                ctx.fillRect(
+                    (candle.x - 10) * scale,
+                    candle.y * scale,
+                    20 * scale,
+                    150 * scale
+                );
+                
+                // Wick
+                ctx.strokeStyle = '#333';
+                ctx.lineWidth = 2 * scale;
+                ctx.beginPath();
+                ctx.moveTo(candle.x * scale, (candle.y - 10) * scale);
+                ctx.lineTo(candle.x * scale, candle.y * scale);
+                ctx.stroke();
+                
+                // Flame
+                if (candle.lit) {
+                    const flameY = candle.y - 30 + Math.sin(flameOffset) * 3;
+                    
+                    // Outer flame
+                    ctx.fillStyle = '#ff6b00';
+                    ctx.beginPath();
+                    ctx.arc(candle.x * scale, flameY * scale, 15 * scale, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Inner flame
+                    ctx.fillStyle = '#ffd700';
+                    ctx.beginPath();
+                    ctx.arc(candle.x * scale, (flameY - 5) * scale, 8 * scale, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Glow
+                    const gradient = ctx.createRadialGradient(
+                        candle.x * scale, flameY * scale, 0,
+                        candle.x * scale, flameY * scale, 30 * scale
+                    );
+                    gradient.addColorStop(0, 'rgba(255, 200, 0, 0.5)');
+                    gradient.addColorStop(1, 'rgba(255, 200, 0, 0)');
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(
+                        (candle.x - 30) * scale,
+                        (flameY - 30) * scale,
+                        60 * scale,
+                        60 * scale
+                    );
+                }
+            });
+        }
+
+        function animate() {
+            flameOffset += 0.1;
+            drawCake();
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // Microphone setup
+        let audioContext;
+        let analyser;
+        let microphone;
+        let dataArray;
+
+        async function setupMicrophone() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                analyser = audioContext.createAnalyser();
+                microphone = audioContext.createMediaStreamSource(stream);
+                microphone.connect(analyser);
+                analyser.fftSize = 256;
+                dataArray = new Uint8Array(analyser.frequencyBinCount);
+                
+                checkBlow();
+            } catch (err) {
+                document.getElementById('status').innerHTML = 
+                    '<span style="color: #ff6b9d;">⚠️ Click screen to enable microphone ⚠️</span>';
+            }
+        }
+
+        // Click to start microphone
+        document.body.addEventListener('click', function() {
+            if (!audioContext) {
+                setupMicrophone();
+            }
+        }, { once: true });
+
+        function checkBlow() {
+            if (!analyser) return;
+            
+            analyser.getByteFrequencyData(dataArray);
+            const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
+            
+            // If loud enough, blow out a candle
+            if (average > 30) {
+                for (let candle of candles) {
+                    if (candle.lit) {
+                        candle.lit = false;
+                        candlesLit--;
+                        document.getElementById('candleCount').textContent = candlesLit;
+                        
+                        // Create confetti
+                        createConfetti();
+                        
+                        if (candlesLit === 0) {
+                            setTimeout(showModal, 500);
+                        }
+                        break;
+                    }
+                }
+            }
+            
+            requestAnimationFrame(checkBlow);
+        }
+
+        function createConfetti() {
+            const colors = ['#ff6b9d', '#ffd700', '#26de81', '#4facfe', '#f093fb'];
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.top = '-10px';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                    document.body.appendChild(confetti);
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 50);
+            }
+        }
+
+        function showModal() {
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function goToFlowers() {
+            window.location.href = 'flowers.html';
+        }
+    </script>
+</body>
+</html>
