@@ -31,32 +31,78 @@
             text-align: center;
             text-shadow: 3px 3px 0px rgba(0,0,0,0.3);
             line-height: 1.6;
+            animation: rainbow 5s infinite;
+        }
+
+        @keyframes rainbow {
+            0%, 100% { color: #fff; }
+            25% { color: #ffd700; }
+            50% { color: #ff69b4; }
+            75% { color: #00ffff; }
         }
 
         .container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 40px;
+            gap: 50px;
             max-width: 1200px;
             width: 100%;
         }
 
-        /* Vase with flowers */
+        /* Beautiful 3D Vase */
         .vase-container {
             position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
+            margin-bottom: 20px;
         }
 
-        .flowers {
+        .flowers-stems {
             display: flex;
-            gap: 15px;
-            margin-bottom: -20px;
-            flex-wrap: wrap;
-            justify-content: center;
-            z-index: 2;
+            gap: 20px;
+            margin-bottom: -40px;
+            z-index: 3;
+            position: relative;
+        }
+
+        .flower-stem {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stem {
+            width: 4px;
+            height: 150px;
+            background: linear-gradient(180deg, #2ecc71 0%, #27ae60 100%);
+            border-radius: 2px;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .stem::before,
+        .stem::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 20px;
+            background: #27ae60;
+            border-radius: 50%;
+            box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .stem::before {
+            left: -15px;
+            top: 40%;
+            transform: rotate(-45deg);
+        }
+
+        .stem::after {
+            right: -15px;
+            top: 60%;
+            transform: rotate(45deg);
         }
 
         .flower {
@@ -64,119 +110,171 @@
             animation: sway 3s ease-in-out infinite;
             cursor: pointer;
             transition: transform 0.3s;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));
+            margin-bottom: 10px;
         }
 
-        .flower:nth-child(1) { animation-delay: 0s; }
-        .flower:nth-child(2) { animation-delay: 0.5s; }
-        .flower:nth-child(3) { animation-delay: 1s; }
-        .flower:nth-child(4) { animation-delay: 1.5s; }
-        .flower:nth-child(5) { animation-delay: 2s; }
+        .flower-stem:nth-child(1) .flower { animation-delay: 0s; }
+        .flower-stem:nth-child(2) .flower { animation-delay: 0.5s; }
+        .flower-stem:nth-child(3) .flower { animation-delay: 1s; }
+        .flower-stem:nth-child(4) .flower { animation-delay: 1.5s; }
+        .flower-stem:nth-child(5) .flower { animation-delay: 2s; }
 
         .flower:hover {
-            transform: scale(1.2) rotate(10deg);
+            transform: scale(1.3) rotate(15deg);
+            filter: drop-shadow(0 0 20px rgba(255,215,0,0.8));
         }
 
         @keyframes sway {
-            0%, 100% { transform: rotate(-5deg); }
-            50% { transform: rotate(5deg); }
+            0%, 100% { transform: rotate(-8deg); }
+            50% { transform: rotate(8deg); }
         }
 
+        /* Beautiful 3D Vase */
         .vase {
-            width: 200px;
-            height: 250px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: 4px solid #fff;
-            box-shadow: 8px 8px 0px rgba(0,0,0,0.3);
+            width: 280px;
+            height: 320px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #667eea 100%);
+            border: 6px solid #fff;
+            box-shadow: 
+                12px 12px 0px rgba(0,0,0,0.3),
+                inset 0 10px 30px rgba(255,255,255,0.2),
+                inset 0 -10px 30px rgba(0,0,0,0.3);
             position: relative;
             clip-path: polygon(
-                20% 0%, 80% 0%,
-                90% 30%, 100% 100%,
-                0% 100%, 10% 30%
+                25% 0%, 75% 0%,
+                85% 20%, 95% 100%,
+                5% 100%, 15% 20%
             );
-            z-index: 1;
+            z-index: 2;
         }
 
         .vase::before {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            right: 10%;
+            height: 30%;
+            background: linear-gradient(
+                135deg,
+                rgba(255,255,255,0.4) 0%,
+                rgba(255,255,255,0.1) 50%,
+                transparent 100%
+            );
+            border-radius: 50%;
+            filter: blur(10px);
+        }
+
+        .vase::after {
             content: '✨';
             position: absolute;
-            font-size: 30px;
-            top: 50%;
+            font-size: 40px;
+            top: 45%;
             left: 50%;
             transform: translate(-50%, -50%);
+            animation: sparkle 2s infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+        }
+
+        /* Decorative patterns on vase */
+        .vase-pattern {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .vase-pattern::before,
+        .vase-pattern::after {
+            content: '◆';
+            position: absolute;
+            font-size: 24px;
+            color: rgba(255,255,255,0.6);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .vase-pattern::before {
+            top: 25%;
+            left: 20%;
+            animation: float-pattern 3s ease-in-out infinite;
+        }
+
+        .vase-pattern::after {
+            top: 60%;
+            right: 20%;
+            animation: float-pattern 3s ease-in-out infinite 1.5s;
+        }
+
+        @keyframes float-pattern {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
         /* Photo gallery */
         .photo-gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px;
             width: 100%;
             margin-top: 20px;
+            padding: 20px;
         }
 
         .photo-frame {
             aspect-ratio: 1;
-            border: 6px solid #fff;
-            box-shadow: 6px 6px 0px rgba(0,0,0,0.3);
-            background: #f0f0f0;
+            border: 8px solid #fff;
+            box-shadow: 
+                8px 8px 0px rgba(0,0,0,0.3),
+                inset 0 0 20px rgba(0,0,0,0.1);
+            background: #f5f5f5;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: clamp(12px, 2vw, 16px);
-            color: #333;
-            text-align: center;
-            padding: 20px;
-            transition: transform 0.3s;
+            transition: transform 0.3s, box-shadow 0.3s;
             cursor: pointer;
             position: relative;
             overflow: hidden;
         }
 
         .photo-frame:hover {
-            transform: rotate(-2deg) scale(1.05);
+            transform: rotate(-3deg) scale(1.05);
+            box-shadow: 
+                12px 12px 0px rgba(0,0,0,0.4),
+                inset 0 0 30px rgba(255,215,0,0.2);
         }
 
-        .photo-frame::before {
-            content: '📷';
-            font-size: 40px;
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        .photo-placeholder {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            line-height: 1.5;
-        }
-
-        /* File upload styling */
-        .upload-area {
-            margin-top: 30px;
-            padding: 30px;
-            border: 4px dashed #fff;
-            background: rgba(255,255,255,0.1);
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            max-width: 500px;
+        .photo-frame img {
             width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
         }
 
-        .upload-area:hover {
-            background: rgba(255,255,255,0.2);
-            transform: scale(1.02);
+        .photo-frame::after {
+            content: '💖';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            opacity: 0;
+            transition: opacity 0.3s;
         }
 
-        .upload-area input {
-            display: none;
+        .photo-frame:hover::after {
+            opacity: 1;
+            animation: heartbeat 1s infinite;
         }
 
-        .upload-text {
-            font-size: clamp(10px, 2.5vw, 14px);
-            line-height: 1.8;
-            margin-bottom: 10px;
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
         }
 
         /* Hearts floating */
@@ -203,26 +301,43 @@
             margin-top: 40px;
             font-size: clamp(12px, 3vw, 18px);
             text-align: center;
-            line-height: 2;
-            padding: 30px;
+            line-height: 2.2;
+            padding: 40px;
             background: rgba(255,255,255,0.2);
-            border: 4px solid #fff;
-            box-shadow: 6px 6px 0px rgba(0,0,0,0.3);
-            max-width: 600px;
+            border: 6px solid #fff;
+            box-shadow: 8px 8px 0px rgba(0,0,0,0.3);
+            max-width: 700px;
+            backdrop-filter: blur(10px);
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
             .photo-gallery {
                 grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
             }
             
             .vase {
-                width: 150px;
-                height: 200px;
+                width: 200px;
+                height: 240px;
             }
             
             .flower {
-                font-size: 40px;
+                font-size: 45px;
+            }
+
+            .stem {
+                height: 100px;
+            }
+
+            .flowers-stems {
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .photo-gallery {
+                grid-template-columns: 1fr;
+                max-width: 300px;
             }
         }
     </style>
@@ -235,36 +350,165 @@
 
     <div class="container">
         <div class="vase-container">
-            <div class="flowers">
-                <div class="flower">🌹</div>
-                <div class="flower">🌸</div>
-                <div class="flower">🌺</div>
-                <div class="flower">🌻</div>
-                <div class="flower">🌷</div>
+            <div class="flowers-stems">
+                <div class="flower-stem">
+                    <div class="flower">🌹</div>
+                    <div class="stem"></div>
+                </div>
+                <div class="flower-stem">
+                    <div class="flower">🌸</div>
+                    <div class="stem"></div>
+                </div>
+                <div class="flower-stem">
+                    <div class="flower">🌺</div>
+                    <div class="stem"></div>
+                </div>
+                <div class="flower-stem">
+                    <div class="flower">🌻</div>
+                    <div class="stem"></div>
+                </div>
+                <div class="flower-stem">
+                    <div class="flower">🌷</div>
+                    <div class="stem"></div>
+                </div>
             </div>
-            <div class="vase"></div>
+            <div class="vase">
+                <div class="vase-pattern"></div>
+            </div>
         </div>
 
         <div class="photo-gallery" id="photoGallery">
             <div class="photo-frame">
-                <div class="photo-placeholder">
-                    <span>PHOTO 1</span>
-                    <span style="font-size: 10px;">Click flower to add</span>
-                </div>
+                <img src="flower1.png" alt="Feyza Photo 1">
             </div>
             <div class="photo-frame">
-                <div class="photo-placeholder">
-                    <span>PHOTO 2</span>
-                    <span style="font-size: 10px;">Click flower to add</span>
-                </div>
+                <img src="flower2.png" alt="Feyza Photo 2">
             </div>
             <div class="photo-frame">
-                <div class="photo-placeholder">
-                    <span>PHOTO 3</span>
-                    <span style="font-size: 10px;">Click flower to add</span>
-                </div>
+                <img src="flower3.png" alt="Feyza Photo 3">
             </div>
             <div class="photo-frame">
-                <div class="photo-placeholder">
-                    <span>PHOTO 4</span>
-                    <span style="
+                <img src="flower4.png" alt="Feyza Photo 4">
+            </div>
+            <div class="photo-frame">
+                <img src="flower5.png" alt="Feyza Photo 5">
+            </div>
+        </div>
+
+        <div class="message">
+            💝 EVERY FLOWER REPRESENTS<br>
+            A REASON WHY I LOVE YOU 💝<br><br>
+            🌹 YOUR SMILE<br>
+            🌸 YOUR KINDNESS<br>
+            🌺 YOUR LAUGHTER<br>
+            🌻 YOUR SPIRIT<br>
+            🌷 YOUR EVERYTHING<br><br>
+            HAPPY BIRTHDAY FEYZA! 🎂
+        </div>
+    </div>
+
+    <script>
+        // Floating hearts animation
+        function createFloatingHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart-float';
+            heart.innerHTML = ['💖', '💕', '💗', '💓', '💝'][Math.floor(Math.random() * 5)];
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.bottom = '-50px';
+            heart.style.animationDelay = Math.random() * 2 + 's';
+            document.body.appendChild(heart);
+            
+            setTimeout(() => heart.remove(), 5000);
+        }
+
+        setInterval(createFloatingHeart, 1000);
+
+        // Flower click effect
+        const flowers = document.querySelectorAll('.flower');
+        flowers.forEach(flower => {
+            flower.addEventListener('click', function() {
+                // Create sparkles
+                createSparkles(this);
+                
+                // Animation
+                this.style.animation = 'none';
+                setTimeout(() => {
+                    this.style.animation = 'sway 3s ease-in-out infinite';
+                }, 10);
+            });
+        });
+
+        // Photo frame click effect
+        const photoFrames = document.querySelectorAll('.photo-frame');
+        photoFrames.forEach(frame => {
+            frame.addEventListener('click', function() {
+                createSparkles(this);
+            });
+        });
+
+        function createSparkles(element) {
+            const rect = element.getBoundingClientRect();
+            const colors = ['#ffd700', '#ff69b4', '#00ffff', '#ff1493', '#ffa500'];
+            
+            for (let i = 0; i < 25; i++) {
+                setTimeout(() => {
+                    const sparkle = document.createElement('div');
+                    sparkle.style.position = 'fixed';
+                    sparkle.style.left = rect.left + rect.width / 2 + 'px';
+                    sparkle.style.top = rect.top + rect.height / 2 + 'px';
+                    sparkle.style.width = '10px';
+                    sparkle.style.height = '10px';
+                    sparkle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    sparkle.style.borderRadius = '50%';
+                    sparkle.style.pointerEvents = 'none';
+                    sparkle.style.zIndex = '9999';
+                    sparkle.style.boxShadow = '0 0 10px currentColor';
+                    
+                    const angle = (Math.PI * 2 * i) / 25;
+                    const velocity = 2 + Math.random() * 4;
+                    const vx = Math.cos(angle) * velocity;
+                    const vy = Math.sin(angle) * velocity;
+                    
+                    document.body.appendChild(sparkle);
+                    
+                    let x = 0, y = 0, opacity = 1;
+                    const animate = () => {
+                        x += vx;
+                        y += vy;
+                        opacity -= 0.015;
+                        
+                        sparkle.style.transform = `translate(${x}px, ${y}px)`;
+                        sparkle.style.opacity = opacity;
+                        
+                        if (opacity > 0) {
+                            requestAnimationFrame(animate);
+                        } else {
+                            sparkle.remove();
+                        }
+                    };
+                    animate();
+                }, i * 25);
+            }
+        }
+
+        // Add color-shifting effect to vase
+        const vase = document.querySelector('.vase');
+        let hue = 0;
+        setInterval(() => {
+            hue = (hue + 0.5) % 360;
+            vase.style.filter = `hue-rotate(${hue}deg) brightness(1.1)`;
+        }, 50);
+
+        // Add floating animation to flowers
+        const flowerStems = document.querySelectorAll('.flower-stem');
+        flowerStems.forEach((stem, index) => {
+            setInterval(() => {
+                const flower = stem.querySelector('.flower');
+                const currentRotation = parseInt(flower.style.transform?.match(/-?\d+/) || '0');
+                const newRotation = currentRotation + (Math.random() - 0.5) * 2;
+                flower.style.transform = `rotate(${newRotation}deg)`;
+            }, 100 + index * 50);
+        });
+    </script>
+</body>
+</html>
