@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Vase of Love 💐</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .title {
+            font-size: clamp(16px, 4vw, 28px);
+            margin: 30px 0;
+            text-align: center;
+            text-shadow: 3px 3px 0px rgba(0,0,0,0.3);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        /* Vase with flowers */
+        .vase-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .flowers {
+            display: flex;
+            gap: 15px;
+            margin-bottom: -20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .flower {
+            font-size: 60px;
+            animation: sway 3s ease-in-out infinite;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .flower:nth-child(1) { animation-delay: 0s; }
+        .flower:nth-child(2) { animation-delay: 0.5s; }
+        .flower:nth-child(3) { animation-delay: 1s; }
+        .flower:nth-child(4) { animation-delay: 1.5s; }
+        .flower:nth-child(5) { animation-delay: 2s; }
+
+        .flower:hover {
+            transform: scale(1.2) rotate(10deg);
+        }
+
+        @keyframes sway {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        .vase {
+            width: 200px;
+            height: 250px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: 4px solid #fff;
+            box-shadow: 8px 8px 0px rgba(0,0,0,0.3);
+            position: relative;
+            clip-path: polygon(
+                20% 0%, 80% 0%,
+                90% 30%, 100% 100%,
+                0% 100%, 10% 30%
+            );
+            z-index: 1;
+        }
+
+        .vase::before {
+            content: '✨';
+            position: absolute;
+            font-size: 30px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Photo gallery */
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .photo-frame {
+            aspect-ratio: 1;
+            border: 6px solid #fff;
+            box-shadow: 6px 6px 0px rgba(0,0,0,0.3);
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(12px, 2vw, 16px);
+            color: #333;
+            text-align: center;
+            padding: 20px;
+            transition: transform 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .photo-frame:hover {
+            transform: rotate(-2deg) scale(1.05);
+        }
+
+        .photo-frame::before {
+            content: '📷';
+            font-size: 40px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .photo-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            line-height: 1.5;
+        }
+
+        /* File upload styling */
+        .upload-area {
+            margin-top: 30px;
+            padding: 30px;
+            border: 4px dashed #fff;
+            background: rgba(255,255,255,0.1);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .upload-area:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.02);
+        }
+
+        .upload-area input {
+            display: none;
+        }
+
+        .upload-text {
+            font-size: clamp(10px, 2.5vw, 14px);
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+
+        /* Hearts floating */
+        .heart-float {
+            position: fixed;
+            font-size: 30px;
+            animation: float-up 5s ease-in infinite;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        @keyframes float-up {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .message {
+            margin-top: 40px;
+            font-size: clamp(12px, 3vw, 18px);
+            text-align: center;
+            line-height: 2;
+            padding: 30px;
+            background: rgba(255,255,255,0.2);
+            border: 4px solid #fff;
+            box-shadow: 6px 6px 0px rgba(0,0,0,0.3);
+            max-width: 600px;
+        }
+
+        @media (max-width: 600px) {
+            .photo-gallery {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .vase {
+                width: 150px;
+                height: 200px;
+            }
+            
+            .flower {
+                font-size: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="title">
+        💐 A VASE OF LOVE 💐<br>
+        <span style="font-size: 0.6em;">FOR FEYZA</span>
+    </div>
+
+    <div class="container">
+        <div class="vase-container">
+            <div class="flowers">
+                <div class="flower">🌹</div>
+                <div class="flower">🌸</div>
+                <div class="flower">🌺</div>
+                <div class="flower">🌻</div>
+                <div class="flower">🌷</div>
+            </div>
+            <div class="vase"></div>
+        </div>
+
+        <div class="photo-gallery" id="photoGallery">
+            <div class="photo-frame">
+                <div class="photo-placeholder">
+                    <span>PHOTO 1</span>
+                    <span style="font-size: 10px;">Click flower to add</span>
+                </div>
+            </div>
+            <div class="photo-frame">
+                <div class="photo-placeholder">
+                    <span>PHOTO 2</span>
+                    <span style="font-size: 10px;">Click flower to add</span>
+                </div>
+            </div>
+            <div class="photo-frame">
+                <div class="photo-placeholder">
+                    <span>PHOTO 3</span>
+                    <span style="font-size: 10px;">Click flower to add</span>
+                </div>
+            </div>
+            <div class="photo-frame">
+                <div class="photo-placeholder">
+                    <span>PHOTO 4</span>
+                    <span style="
